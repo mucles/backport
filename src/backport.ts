@@ -123,11 +123,13 @@ const backportOnce = async ({
     title,
   });
 
+
+
   await github.request("POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers", {
     owner,
     repo,
     pull_number: number,
-    reviewers: [owner,merged_by],
+    reviewers: (owner != merged_by) ? [owner,merged_by] : [owner],
   });
   
   if (labels.length > 0) {
