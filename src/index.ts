@@ -20,7 +20,6 @@ const run = async () => {
       labels,
     }: Readonly<{ base: string; labels: readonly string[] }>): string[] => {
       const json = _getLabels({ base, labels });
-      info(`Labels template result: ${json}.`);
       try {
         return JSON.parse(json) as string[];
       } catch (_error: unknown) {

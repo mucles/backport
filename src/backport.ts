@@ -43,7 +43,6 @@ const getBaseBranches = ({
     const base = getBaseBranchFromLabel(payload.label.name, labelRegExp);
     return base ? [base] : [];
   }
-  info(`Labels: ${JSON.stringify(payload.pull_request.labels)}.`);
   return compact(
     payload.pull_request.labels.map((label) =>
       getBaseBranchFromLabel(label.name, labelRegExp),
@@ -124,7 +123,6 @@ const backportOnce = async ({
     repo,
     title,
   });
-  info(`Author: ${author}, Merger: ${merged_by}.`);
   await github.request(
     "POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers",
     {
@@ -135,7 +133,6 @@ const backportOnce = async ({
         author != merged_by && merged_by != "" ? [author, merged_by] : [author],
     },
   );
-  info(`Label Length ${labels.length},Labels: ${labels}`);
   if (labels.length > 0) {
     await github.request(
       "PUT /repos/{owner}/{repo}/issues/{issue_number}/labels",
@@ -299,14 +296,11 @@ const backport = async ({
       number,
     });
     const head = getHead({ base, number });
-    info(`Original Labels: ${JSON.stringify(originalLabels)}`);
-    const labels = originalLabels.map((label) => label.name);
-    const filteredLabels = labels.filter((label) => !labelRegExp.test(label));
-    info(`Filtered Labels: ${JSON.stringify(filteredLabels)}`);
+    const labels = originalLabels
+      .map((label) => label.name)
+      .filter((label) => !labelRegExp.test(label));
     const title = getTitle({ base, number, title: originalTitle });
-    info(`Original Merger: ${JSON.stringify(originalMergedBy)}`);
     const merged_by = originalMergedBy?.login ?? "";
-    info(`Filtered Merger: ${JSON.stringify(merged_by)}`);
 
     // PRs are handled sequentially to avoid breaking GitHub's log grouping feature.
     // eslint-disable-next-line no-await-in-loop
