@@ -131,7 +131,8 @@ const backportOnce = async ({
       owner,
       repo,
       pull_number: number,
-      reviewers: author != merged_by ? [author, merged_by] : [owner],
+      reviewers:
+        author != merged_by && merged_by != "" ? [author, merged_by] : [author],
     },
   );
   info(`Label Length ${labels.length},Labels: ${labels}`);
@@ -299,20 +300,12 @@ const backport = async ({
     });
     const head = getHead({ base, number });
     info(`Original Labels: ${JSON.stringify(originalLabels)}`);
-    const labels = getLabels({
-      base,
-      labels: originalLabels
-        .map(({ name }) => name)
-        .filter((label) => !labelRegExp.test(label)),
-    });
-    info(`Filtered Labels: ${JSON.stringify(labels)}`);
+    const labels = originalLabels.map((label) => label.name);
+    const filteredLabels = labels.filter((label) => !labelRegExp.test(label));
+    info(`Filtered Labels: ${JSON.stringify(filteredLabels)}`);
     const title = getTitle({ base, number, title: originalTitle });
     info(`Original Merger: ${JSON.stringify(originalMergedBy)}`);
-    const merged_by = getMergedBy({
-      base,
-      number,
-      mergedBy: originalMergedBy?.login ?? null,
-    });
+    const merged_by = originalMergedBy?.login ?? "";
     info(`Filtered Merger: ${JSON.stringify(merged_by)}`);
 
     // PRs are handled sequentially to avoid breaking GitHub's log grouping feature.
