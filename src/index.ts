@@ -7,7 +7,7 @@ import { backport } from "./backport.js";
 
 const run = async () => {
   try {
-    const [getBody, getHead, _getLabels, getTitle, getMergedBy] = [
+    const [getBody, getHead, getTitle] = [
       "body_template",
       "head_template",
       "title_template",
