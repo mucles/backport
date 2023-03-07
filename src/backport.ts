@@ -192,9 +192,7 @@ const getFailedBackportCommentBody = ({
 const backport = async ({
   getBody,
   getHead,
-  getLabels,
   getTitle,
-  getMergedBy,
   labelRegExp,
   payload,
   token,
@@ -213,24 +211,11 @@ const backport = async ({
       number: number;
     }>,
   ) => string;
-  getLabels: (
-    props: Readonly<{
-      base: string;
-      labels: readonly string[];
-    }>,
-  ) => string[];
   getTitle: (
     props: Readonly<{
       base: string;
       number: number;
       title: string;
-    }>,
-  ) => string;
-  getMergedBy: (
-    props: Readonly<{
-      base: string;
-      number: number;
-      mergedBy: string | null;
     }>,
   ) => string;
   labelRegExp: RegExp;
